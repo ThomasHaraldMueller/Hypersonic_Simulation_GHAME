@@ -47,7 +47,7 @@ end
 
 if runTrim
     fprintf('Running trim routine...\n');
-    model = 'Trim_Non_Rotating';
+    model = 'Trim';
     
     % ------------------------------------------------------------------------
     % Extract compiled states and ordering
@@ -236,3 +236,4 @@ if runTrim
 end
 
 end
+
