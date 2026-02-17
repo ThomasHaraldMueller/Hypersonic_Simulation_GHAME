@@ -1,0 +1,64 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Main.m
+%
+% Master script for nonlinear aircraft simulation.
+% This script initializes the environment, adds required helper functions,
+% and runs the simulation with optional trimming and uncertainty modeling.
+% Results are collected and plotted automatically.
+%
+% Written by Thomas H. Mueller
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clc; close all; clear
+
+addpath('Helper Functions','Helper Functions/Miscellaneous', 'Simulink', 'TrimMod', 'Plotting')
+
+% Figure saving options
+SAVE_EPS = true;                       % Enable or disable figure export
+
+if SAVE_EPS && ~exist("Figures_Eps", "dir")
+    mkdir("Figures_Eps")
+end
+
+% Load aeropropulsive data
+Data = Load_Aero_Data();
+    
+% Function handles 
+F = struct( ...
+  'mat3tr',        @mat3tr, ...
+  'cad_tdi84',     @cad_tdi84, ...
+  'cad_tgi84',     @cad_tgi84, ...
+  'cad_in_geo84',  @cad_in_geo84, ...
+  'init_ins',      @init_ins, ...
+  'pol_from_cart', @pol_from_cart, ...
+  'absolute',      @absolute);
+
+% Compute initial condition for trimming.
+[Sim, IC] = Initialize_Simulation(F); 
+
+% Verify if mission description fits your case
+Print_Mission_Description(Sim, IC);
+
+% Generate Trim
+[Sim, IC] = Trim_Run_jj(true, false, Sim, IC);
+
+% Recalculate Initial condition based on trimmed alpha and theta
+[Sim, IC] = Reinitialize_Simulation(Sim, IC, F);
+
+% Simulate uncertainty
+Sim.uncertainty.N     = 5;
+Sim.uncertainty.Delta = 0.3;
+Sim.uncertainty.seed  = 67;
+Sim.simulation.duration = 10;
+
+Sim.mode.muncertainty = 1;
+Sim.mode.mnoise = 0;
+Sim.mode.mperturbations = 0;
+Sim.mode.mturb = 1;
+Sim.mode.mwind = 0;
+
+
+
+
+
+
+
