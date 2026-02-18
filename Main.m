@@ -42,21 +42,39 @@ Print_Mission_Description(Sim, IC);
 [Sim, IC] = Trim_Run_jj(true, false, Sim, IC);
 
 % Recalculate Initial condition based on trimmed alpha and theta
-[Sim, IC] = Reinitialize_Simulation(Sim, IC, F);
+IC = Reinitialize_Simulation(IC, F);
+
+% Build Commands for the simulation
+CMD = Build_Command_Profile(Sim, IC);
 
 % Simulate uncertainty
-Sim.uncertainty.N     = 5;
-Sim.uncertainty.Delta = 0.3;
-Sim.uncertainty.seed  = 67;
-Sim.simulation.duration = 10;
+UNC = Create_Uncertainty(Data, Sim.uncertainty.Delta, 67);
+OUT = Run_Uncertainty_Simulations(Sim, Data, 'GHAME_Model');
 
-Sim.mode.muncertainty = 1;
-Sim.mode.mnoise = 0;
-Sim.mode.mperturbations = 0;
-Sim.mode.mturb = 1;
-Sim.mode.mwind = 0;
+%%
+% ================== Select output directory ==================
+if Sim.uncertainty.N >= 1
+    OUTDIR = fullfile(pwd, 'MonteCarloResults');
+else
+    OUTDIR = fullfile(pwd, 'SimulationResults');
+end
 
+if ~exist(OUTDIR, 'dir')
+    mkdir(OUTDIR);
+end
 
+%%================== Define filename suffix ==================
+suffix = sprintf('_U%d_W%d_N%d_T%d_P%d', ...
+    Sim.mode.muncertainty * Sim.uncertainty.N, ...  % Number of uncertainty runs, 0 if off
+    Sim.mode.mwind, ...                             % Wind model flag
+    Sim.mode.mnoise, ...                            % Sensor noise flag
+    Sim.mode.mturb, ...                             % Turbulence flag
+    Sim.mode.mperturbations);                       % Perturbation flag
+
+% ================== Plot and save ==================
+Plot_Responses(OUT, Sim, SAVE_EPS, OUTDIR, suffix);
+
+clearvars suffix OUTDIR
 
 
 
