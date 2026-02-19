@@ -1,5 +1,12 @@
 # Hypersonic_Simulation_GHAME
-Simulink implementation of the 6-DOF Generic Hypersonic Aerodynamic Model Example (GHAME)
+
+Simulink implementation of the 6-DOF Generic Hypersonic Aerodynamic Model Example (GHAME).
+
+The original GHAME implementation was developed by Peter H. Zipfel as C++ code accompanying *Modeling and Simulation of Aerospace Vehicle Dynamics, Fourth Edition*. The reference implementation can be obtained from the AIAA website:  
+https://arc.aiaa.org/doi/suppl/10.2514/4.107535  
+
+This Simulink model reproduces the original formulation. Simulation results have been cross-verified against the reference C++ implementation to ensure consistency and correctness.
+
 
 
 ## Overview
