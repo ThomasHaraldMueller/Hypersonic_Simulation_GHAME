@@ -1,5 +1,7 @@
 function [Sim, IC] = Initialize_Simulation(F)
-% InitializeSimulation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% InitializeSimulation.m
+%
 % Builds the full simulation configuration and corresponding
 % initial conditions for the nonlinear aircraft model.
 %
@@ -9,7 +11,9 @@ function [Sim, IC] = Initialize_Simulation(F)
 %
 % Dependencies:
 %   F : helper function container
-
+%
+% Written by Thomas H. Mueller, 2025
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ========================================================================
 % USER-DEFINED SIMULATION INPUTS
 %
@@ -18,56 +22,77 @@ function [Sim, IC] = Initialize_Simulation(F)
 % ========================================================================
 
 % ---------------- Simulation and integration ----------------
-Sim.sample_time = 0.01;              % Integration time step [s]
-Sim.simulation.duration = 10;        % Simulation duration
+Sim.sample_time             = 0.01;         % Integration time step [s]
+Sim.simulation.duration     = 10;           % Simulation duration
 
 % ---------------- Controller and model toggles ----------------
-Sim.mode.mEarth             = 1;     % 0: spherical Earth, 1: oblate Earth
+Sim.controller.K_sep        = 4;            % Separation factor
+Sim.mode.mEarth             = 1;            % 0: spherical Earth, 1: oblate Earth
 
-Sim.mode.mwind              = 0;     % Enable wind model
-Sim.mode.mturb              = 0;     % Enable turbulence
-Sim.mode.mnoise             = 0;     % Enable sensor noise
-Sim.mode.mINS               = 0;     % Enable INS, NOT functional so far
-Sim.mode.mperturbations     = 0;     % Enable perturbations
-Sim.mode.muncertainty       = 0;     % Enable uncertain simulations
+Sim.mode.mwind              = 0;            % Enable wind model
+Sim.mode.mturb              = 0;            % Enable turbulence
+Sim.mode.mnoise             = 0;            % Enable sensor noise
+Sim.mode.mINS               = 0;            % Enable INS, NOT functional so far
+Sim.mode.mperturbations     = 0;            % Enable perturbations
+Sim.mode.muncertainty       = 1;            % Enable uncertain simulations
 
 % ---------------- Actuator model ----------------
-Sim.actuator.mact = 2;                          % Actuator model selector
-Sim.actuator.zeta = 0.707;                      % Actuator damping ratio
-Sim.actuator.omega   = 50;                      % Actuator natural frequency [rad/s]
-Sim.actuator.deflection_limit_deg      = 20;    % Actuator deflcetion limit  [deg]
-Sim.actuator.deflection_rate_limit_deg = 150;   % Actuator rate limit        [deg/s]
+Sim.actuator.mact                       = 2;        % Actuator model selector
+Sim.actuator.zeta                       = 0.707;    % Actuator damping ratio
+Sim.actuator.omega                      = 50;       % Actuator natural frequency [rad/s]
+Sim.actuator.deflection_limit_deg       = 20;       % Actuator deflcetion limit  [deg]
+Sim.actuator.deflection_rate_limit_deg  = 150;      % Actuator rate limit        [deg/s]
 
 % ------------------ Wind model ------------------
-Sim.wind.turb_sigma  = 2.0; % Wind turbulence intensity
-Sim.wind.turb_length = 150; % Wind trubulence length    [m]
+Sim.wind.turb_sigma         = 2.0;          % Wind turbulence intensity
+Sim.wind.turb_length        = 150;          % Wind trubulence length    [m]
 
 % ---------------- Filter models ----------------
-Sim.uncertainty.N     = 0;        % Number of uncertainty runs
-Sim.uncertainty.Delta = 0.3;      % Max uniform uncertainty 
-Sim.uncertainty.seed  = 67;       % Seed for reproduceablity
+Sim.filters.omega_AA        = 80;           % Anti-aliasing cutoff frequency [rad/s]
+Sim.filters.omega_N         = 30;           % Noise filter natural frequency [rad/s]
+Sim.filters.zeta_N          = 0.707;        % Noise filter damping ratio 
+Sim.filters.delay_step      = 0;            % Effective actuator delay [s]
+
+% ----------------- Uncertainty ------------------
+Sim.uncertainty.N           = 5;            % Number of uncertainty runs
+Sim.uncertainty.Delta       = 0.3;          % Max uniform uncertainty 
+Sim.uncertainty.seed        = 67;           % Seed for reproduceablity
 
 % ---------------- Launch location ----------------
-Sim.launch.lonx = 0;               % Geodetic longitude [deg]
-Sim.launch.latx = 0;               % Geodetic latitude  [deg]
+Sim.launch.lonx             = 0;            % Geodetic longitude [deg]
+Sim.launch.latx             = 0;            % Geodetic latitude  [deg]
 
 % ---------------- Initial flight condition ----------------
-Sim.initial.velocity.dvbe  = 885.1392; % Initial airspeed [m/s]
-Sim.initial.altitude.alt   = 14288;    % Initial altitude [m]
+Sim.initial.velocity.dvbe   = 885.1392;     % Initial airspeed [m/s]
+Sim.initial.altitude.alt    = 14288;        % Initial altitude [m]
 
-Sim.initial.attitude.psibdx = 0;       % Initial yaw   [deg]
-Sim.initial.attitude.thtbdx = 2.5;     % Initial pitch [deg]
-Sim.initial.attitude.phibdx = 0;       % Initial roll  [deg]
+Sim.initial.attitude.psibdx = 0;            % Initial yaw   [deg]
+Sim.initial.attitude.thtbdx = 2.5;          % Initial pitch [deg]
+Sim.initial.attitude.phibdx = 0;            % Initial roll  [deg]
 
-Sim.initial.aero.alpha_deg = 2.5;      % Initial angle of attack [deg]
-Sim.initial.aero.beta_deg  = 0;        % Initial sideslip angle [deg]
+Sim.initial.aero.alpha_deg  = 2.5;          % Initial angle of attack [deg]
+Sim.initial.aero.beta_deg   = 0;            % Initial sideslip angle [deg]
 
-Sim.initial.rates.ppx = 0;             % Initial roll rate  [deg/s]
-Sim.initial.rates.qqx = 0;             % Initial pitch rate [deg/s]
-Sim.initial.rates.rrx = 0;             % Initial yaw rate   [deg/s]
+Sim.initial.rates.ppx       = 0;            % Initial roll rate  [deg/s]
+Sim.initial.rates.qqx       = 0;            % Initial pitch rate [deg/s]
+Sim.initial.rates.rrx       = 0;            % Initial yaw rate   [deg/s]
 
 % ---------------- Vehicle mass state ----------------
-Sim.vehicle.fuel.fraction = 0.5;       % Fuel fraction (0 = empty, 1 = full)
+Sim.vehicle.fuel.fraction   = 0.5;          % Fuel fraction (0 = empty, 1 = full)
+
+% ----------------- Uncertainty Consistency Check ------------------
+
+if Sim.uncertainty.N > 0 && Sim.mode.muncertainty == 0
+    warning(['Uncertainty runs requested (N = %d) but ', ...
+             'Sim.mode.muncertainty is disabled. ', ...
+             'No Monte Carlo simulations will be executed.'], ...
+             Sim.uncertainty.N);
+end
+
+if Sim.uncertainty.N == 0 && Sim.mode.muncertainty == 1
+    warning(['Sim.mode.muncertainty is enabled but N = 0. ', ...
+             'Only nominal simulation will be executed.']);
+end
 
 %%% Warning DO NOT change values from here onwards %%%
 
@@ -217,5 +242,6 @@ IC.dp_trim = 0;
 IC.dq_trim = 0;
 IC.dr_trim = 0;
 IC.dT_trim = 0.05;
+
 
 end
