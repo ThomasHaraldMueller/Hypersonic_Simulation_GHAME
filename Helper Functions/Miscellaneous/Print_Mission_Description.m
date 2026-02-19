@@ -42,6 +42,7 @@ function Print_Mission_Description(Sim, IC)
 
     if Sim.mode.muncertainty == 1
         desc = desc + sprintf("  - Uncertainty:        Enabled\n");
+        desc = desc + sprintf("  - Monte Carlo:        %d runs\n", Sim.uncertainty.N);
     else
         desc = desc + sprintf("  - Uncertainty:        Disabled\n");
     end
