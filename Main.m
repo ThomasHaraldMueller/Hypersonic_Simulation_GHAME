@@ -15,10 +15,6 @@ addpath('Helper Functions','Helper Functions/Miscellaneous', 'Simulink', 'TrimMo
 % Figure saving options
 SAVE_EPS = true;                       % Enable or disable figure export
 
-if SAVE_EPS && ~exist("Figures_Eps", "dir")
-    mkdir("Figures_Eps")
-end
-
 % Load aeropropulsive data
 Data = Load_Aero_Data();
     
@@ -38,7 +34,9 @@ F = struct( ...
 % Verify if mission description fits your case
 Print_Mission_Description(Sim, IC);
 
-% Generate Trim
+% Execute steady-state trim procedure.
+% Argument 1: enable console output
+% Argument 2: force retrim regardless of cached conditions
 [Sim, IC] = Trim_Run_jj(true, false, Sim, IC);
 
 % Recalculate Initial condition based on trimmed alpha and theta
