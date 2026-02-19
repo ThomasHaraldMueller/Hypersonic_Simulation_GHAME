@@ -7,6 +7,10 @@ https://arc.aiaa.org/doi/suppl/10.2514/4.107535
 
 This Simulink model reproduces the original formulation. Simulation results have been cross-verified against the reference C++ implementation to ensure consistency and correctness.
 
+The trimming procedure is based on the open-source **TrimMod** package and does not require the *Simulink Control Design Toolbox*.  
+
+The *Aerospace Blockset Toolbox* is only required for optional wind modeling functionality. This feature is commented out by default and can be activated if the toolbox is available.
+
 The code has been tested and verified to run in MATLAB versions down to **MATLAB R2018b**.
 
 ## Overview
