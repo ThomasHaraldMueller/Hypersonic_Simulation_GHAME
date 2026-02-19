@@ -47,7 +47,7 @@ CMD = Build_Command_Profile(Sim, IC);
 
 % Simulate uncertainty
 UNC = Create_Uncertainty(Data, Sim.uncertainty.Delta, 67);
-OUT = Run_Uncertainty_Simulations(Sim, Data, 'GHAME_Model');
+OUT = Run_Simulations(Sim, Data, 'GHAME_Model');
 
 %%
 % ================== Select output directory ==================
