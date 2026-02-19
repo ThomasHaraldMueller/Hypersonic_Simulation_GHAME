@@ -1,4 +1,4 @@
-# Hypersonic_Simulation_GHAME
+# Hypersonic Simulation Model Simulink
 
 Simulink implementation of the 6-DOF Generic Hypersonic Aerodynamic Model Example (GHAME), a hypersonic aerodynamic model originally developed by NASA in 1989 as a simulation platform for the National AeroSpace Plane (NASP) program.
 
@@ -15,10 +15,12 @@ The code has been tested and verified to run in MATLAB versions down to **MATLAB
 
 ## Overview
 
-This repository contains a nonlinear six-degree-of-freedom flight dynamics simulation of the Generic Hypersonic Aerodynamic Model Example (GHAME), implemented entirely in Simulink and MATLAB.
+The simulation provides a full nonlinear 6-DOF flight dynamics model of the GHAME vehicle, including rigid-body translational and rotational dynamics, aeropropulsive force and moment modeling, environmental modeling, and Direction Cosine Matrix–based kinematics.
 
-The model represents a rigid hypersonic vehicle including full translational and rotational dynamics, Earth kinematics, aerodynamic force and moment modeling, propulsion effects, actuator dynamics, and a configurable inertial navigation system (INS). It is designed as a research and control development platform tool.
+The model includes second-order actuator dynamics, a trimming routine for determining control surface deflections and thrust settings, and a configurable inertial navigation system (INS). The INS allows the injection of gyro bias, scale factor errors, misalignment effects, and measurement noise for analysis of estimation and control robustness.
 
-The simulation architecture is modular and structured to allow systematic analysis, controller design, uncertainty studies, and verification.
+No control or guidance system is included by default. The platform is intentionally provided as a research and control development framework, enabling users to design, implement, and test their own control architectures.
+
+The overall simulation architecture is modular and structured to facilitate systematic extension. Additional subsystems such as GPS models, star trackers, advanced state estimation, guidance algorithms, or nonlinear control strategies can be integrated without restructuring the core dynamics model.
 
 ---
