@@ -37,8 +37,18 @@ if ~forceTrim
         
         if isequal(current,lastCond)
             runTrim = false;
-            load(trimFileState,'Sim','IC')
-            fprintf('Trim skipped. Using cached trim.\n');
+        
+            tmp = load(trimFileState,'IC');
+        
+            % Only copy trim-related fields
+            IC.alpha_trim = tmp.IC.alpha_trim;
+            IC.thtbd_trim = tmp.IC.thtbd_trim;
+            IC.dp_trim    = tmp.IC.dp_trim;
+            IC.dq_trim    = tmp.IC.dq_trim;
+            IC.dr_trim    = tmp.IC.dr_trim;
+            IC.dT_trim    = tmp.IC.dT_trim;
+        
+            fprintf('Trim skipped. Using cached trim results.\n');
         end
     end
 end
@@ -236,4 +246,3 @@ if runTrim
 end
 
 end
-
