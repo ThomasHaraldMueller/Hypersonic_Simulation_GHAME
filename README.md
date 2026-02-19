@@ -7,7 +7,7 @@ https://arc.aiaa.org/doi/suppl/10.2514/4.107535
 
 This Simulink model reproduces the original formulation. Simulation results have been cross-verified against the reference C++ implementation to ensure consistency and correctness.
 
-
+The code has been tested and verified to run in MATLAB versions down to **MATLAB R2018b**.
 
 ## Overview
 
