@@ -109,11 +109,11 @@ title('Load Factor Response')
 subplot(1,2,2); hold on; grid on
 set(gca,'FontSize',style.FontSize)
 
-q_nom = OUT.nom.rates(2,:)';   % 3xNt → row 2 → column
+q_nom = OUT.nom.rates(2,:);   % 3xNt → row 2 → column
 plot(t, q_nom,'r','LineWidth',style.LineWidth)
 
 if munc && ~isempty(OUT.unc)
-    q_unc = squeeze(OUT.unc.rates(:,2,:));   % N x Nt
+    q_unc = squeeze(OUT.unc.rates(:,:,2));   % N x Nt
     plot(t, q_unc','Color',[0.6 0.6 1])
 end
 
